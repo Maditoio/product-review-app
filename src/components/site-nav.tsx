@@ -64,7 +64,7 @@ export function SiteNav() {
                   key={link.href}
                   href={link.href}
                   className={cn(
-                    "inline-flex h-8 items-center gap-1.5 rounded-[8px] px-3 text-[13px] transition-all duration-150 ease-in",
+                    "inline-flex h-8 items-center gap-1.5 rounded-lg px-3 text-[13px] transition-all duration-150 ease-in",
                     active ? "bg-[#EFF6FF] text-[#2563EB]" : "text-[#6B7280] hover:bg-[#F3F4F6]",
                   )}
                 >

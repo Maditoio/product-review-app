@@ -134,7 +134,7 @@ export default async function ProductResultsPage({ params }: Params) {
                               {labels.map((label) => (
                                 <span
                                   key={`${review.id}-${categoryName}-${label}`}
-                                  className="rounded-[6px] bg-[#F1F3F6] px-2 py-1 text-[12px] text-[#374151]"
+                                  className="rounded-md bg-[#F1F3F6] px-2 py-1 text-[12px] text-[#374151]"
                                 >
                                   {label}
                                 </span>

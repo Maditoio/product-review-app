@@ -46,7 +46,7 @@ export default async function AdminDashboardPage() {
                   <tr key={product.id} className={index % 2 ? "bg-[#F9FAFB]" : "bg-transparent"}>
                     <td className="border-b border-[rgba(0,0,0,0.05)] px-3 py-2">
                       <div className="flex items-center gap-2">
-                        <div className="relative h-10 w-10 overflow-hidden rounded-[8px] bg-[#F1F3F6]">
+                        <div className="relative h-10 w-10 overflow-hidden rounded-lg bg-[#F1F3F6]">
                           {product.image ? <Image src={product.image} alt={product.name} fill className="object-cover" /> : null}
                         </div>
                         <div>

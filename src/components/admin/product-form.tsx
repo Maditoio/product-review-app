@@ -342,7 +342,7 @@ export function ProductForm({ mode, initialData, structureLocked = false }: Prod
         {errors.categories ? <p className="text-[12px] text-[#DC2626]">{errors.categories}</p> : null}
 
         {data.categories.map((category, catIdx) => (
-          <div key={`cat-${catIdx}`} className="rounded-[12px] border border-[rgba(0,0,0,0.07)] bg-[#FAFAFA] p-3">
+          <div key={`cat-${catIdx}`} className="rounded-xl border border-[rgba(0,0,0,0.07)] bg-[#FAFAFA] p-3">
             <div className="mb-2 flex items-center gap-2">
               <input
                 className="input flex-1"

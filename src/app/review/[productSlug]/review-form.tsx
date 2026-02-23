@@ -128,7 +128,7 @@ export function ReviewForm({ product }: ReviewFormProps) {
         <h2 className="text-[20px] font-semibold text-[#111827]">Thank you for your review</h2>
         <p className="mt-2 text-[13px] text-[#6B7280]">Your feedback has been recorded successfully.</p>
         {product.image ? (
-          <div className="relative mx-auto mt-4 h-40 w-full max-w-sm overflow-hidden rounded-[12px]">
+          <div className="relative mx-auto mt-4 h-40 w-full max-w-sm overflow-hidden rounded-xl">
             <Image src={product.image} alt={product.name} fill className="object-cover" />
           </div>
         ) : null}
@@ -142,7 +142,7 @@ export function ReviewForm({ product }: ReviewFormProps) {
         <h1 className="text-[20px] font-semibold text-[#111827]">{product.name}</h1>
         <p className="mt-2 text-[13px] text-[#6B7280]">{product.description}</p>
         {product.image ? (
-          <div className="relative mt-3 h-44 w-full overflow-hidden rounded-[12px]">
+          <div className="relative mt-3 h-44 w-full overflow-hidden rounded-xl">
             <Image src={product.image} alt={product.name} fill className="object-cover" />
           </div>
         ) : null}
@@ -168,7 +168,7 @@ export function ReviewForm({ product }: ReviewFormProps) {
               return (
                 <label
                   key={option.id}
-                  className="flex items-center gap-2 rounded-[8px] bg-[#F1F3F6] px-3 py-2 text-[13px] text-[#111827]"
+                  className="flex items-center gap-2 rounded-lg bg-[#F1F3F6] px-3 py-2 text-[13px] text-[#111827]"
                 >
                   <input
                     type="checkbox"
