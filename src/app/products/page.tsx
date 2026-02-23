@@ -2,12 +2,12 @@ import { ProductCatalog } from "@/components/store/product-catalog";
 
 export const dynamic = "force-dynamic";
 
-export default async function Home() {
+export default async function ProductsPage() {
   return (
     <main className="page-wrap py-5">
       <ProductCatalog
-        title="Browse Products"
-        description="Choose a product below to submit your review. Each product has category checkboxes and an overall star rating."
+        title="Product Store"
+        description="Visitors can browse available products and choose one to review."
       />
     </main>
   );

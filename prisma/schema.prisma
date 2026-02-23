@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  role      Role     @default(ADMIN)
+  createdAt DateTime @default(now())
+}
+
+model Product {
+  id          String           @id @default(cuid())
+  name        String
+  slug        String           @unique
+  description String
+  image       String?
+  category    String
+  isActive    Boolean          @default(true)
+  createdAt   DateTime         @default(now())
+  categories  ReviewCategory[]
+  reviews     Review[]
+}
+
+model ReviewCategory {
+  id           String           @id @default(cuid())
+  productId     String
+  name         String
+  displayOrder Int
+  product      Product          @relation(fields: [productId], references: [id], onDelete: Cascade)
+  options      CategoryOption[]
+
+  @@index([productId])
+}
+
+model CategoryOption {
+  id           String          @id @default(cuid())
+  categoryId   String
+  label        String
+  displayOrder Int
+  category     ReviewCategory  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  selections   SelectedOption[]
+
+  @@index([categoryId])
+}
+
+model Review {
+  id             String           @id @default(cuid())
+  productId       String
+  reviewerName   String?
+  starRating     Int
+  submittedAt    DateTime         @default(now())
+  product        Product          @relation(fields: [productId], references: [id], onDelete: Cascade)
+  selectedOptions SelectedOption[]
+
+  @@index([productId])
+}
+
+model SelectedOption {
+  id               String         @id @default(cuid())
+  reviewId          String
+  categoryOptionId  String
+  review            Review         @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  categoryOption    CategoryOption @relation(fields: [categoryOptionId], references: [id], onDelete: Restrict)
+
+  @@index([reviewId])
+  @@index([categoryOptionId])
+}

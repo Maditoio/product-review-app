@@ -1,36 +1,93 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Product Review System
 
-## Getting Started
+Full-stack product review app built with Next.js (App Router), Prisma ORM, PostgreSQL, NextAuth credentials auth (admin only), Vercel Blob image uploads, Tailwind CSS, and Lucide React icons.
 
-First, run the development server:
+## Features
+
+- Public review form per product: multi-select options per category + required 1–5 star rating
+- Admin login and protected admin routes
+- Product management: create, edit, activate/deactivate, image upload
+- Aggregated results per product with per-option bars and percentages
+- Raw review table and CSV export
+- Seeded data: 1 admin user + 6 products (5 juices, 1 beignets)
+
+## Tech Stack
+
+- Next.js 16 App Router (compatible with Next.js 14+ architecture)
+- Prisma ORM + PostgreSQL (Neon/Supabase)
+- NextAuth credentials provider
+- Vercel Blob for image uploads
+- Tailwind CSS + custom design tokens in global styles
+
+## Environment Variables
+
+Copy `.env.example` to `.env` and fill values:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+DATABASE_URL=
+NEXTAUTH_SECRET=
+NEXTAUTH_URL=http://localhost:3000
+BLOB_READ_WRITE_TOKEN=
+ADMIN_EMAIL=admin@example.com
+ADMIN_PASSWORD_HASH=
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Generate a password hash for admin:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+node -e 'require("bcryptjs").hash("your-admin-password",10).then(console.log)'
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+If `ADMIN_PASSWORD_HASH` is omitted, seed uses fallback password `admin12345`.
 
-## Learn More
+## Setup
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm install
+npm run prisma:generate
+npm run prisma:migrate
+npm run prisma:seed
+npm run dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Required by the project spec:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `prisma migrate dev` is available via `npm run prisma:migrate`
+- `prisma db seed` is available via `npm run prisma:seed`
 
-## Deploy on Vercel
+## Main Routes
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Public review: `/review/[productSlug]`
+- Public summary: `/review/[productSlug]/results`
+- Admin login: `/admin/login`
+- Admin dashboard: `/admin/dashboard`
+- New product: `/admin/products/new`
+- Edit product: `/admin/products/[id]/edit`
+- Product results: `/admin/products/[id]/results`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## API Routes
+
+- `POST /api/reviews`
+- `POST /api/admin/products`
+- `PUT /api/admin/products/[id]`
+- `PATCH /api/admin/products/[id]/toggle`
+- `GET /api/admin/products/[id]/export`
+- `POST /api/admin/upload`
+- `GET|POST /api/auth/[...nextauth]`
+
+All custom API routes validate input with Zod.
+
+## Deployment (Vercel)
+
+1. Push repo to GitHub.
+2. Import project in Vercel.
+3. Add all environment variables from `.env.example`.
+4. Set a Postgres `DATABASE_URL` from Neon or Supabase.
+5. Deploy.
+
+After first deploy, run migrations/seed against production database:
+
+```bash
+npx prisma migrate deploy
+npx prisma db seed
+```
