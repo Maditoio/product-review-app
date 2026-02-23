@@ -109,20 +109,47 @@ export default async function ProductResultsPage({ params }: Params) {
               </tr>
             </thead>
             <tbody>
-              {product.reviews.map((review, index) => (
-                <tr key={review.id} className={index % 2 ? "bg-[#F9FAFB]" : "bg-transparent"}>
-                  <td className="border-b border-[rgba(0,0,0,0.05)] px-3 py-2">{review.reviewerName || "Anonymous"}</td>
-                  <td className="border-b border-[rgba(0,0,0,0.05)] px-3 py-2 tabular-nums">{review.starRating}</td>
-                  <td className="border-b border-[rgba(0,0,0,0.05)] px-3 py-2">
-                    {review.selectedOptions
-                      .map((selection) => `${selection.categoryOption.category.name}: ${selection.categoryOption.label}`)
-                      .join(" | ")}
-                  </td>
-                  <td className="border-b border-[rgba(0,0,0,0.05)] px-3 py-2 tabular-nums text-[#6B7280]">
-                    {format(review.submittedAt, "yyyy-MM-dd HH:mm")}
-                  </td>
-                </tr>
-              ))}
+              {product.reviews.map((review, index) => {
+                const groupedSelections = review.selectedOptions.reduce(
+                  (acc, selection) => {
+                    const categoryName = selection.categoryOption.category.name;
+                    const current = acc.get(categoryName) || [];
+                    current.push(selection.categoryOption.label);
+                    acc.set(categoryName, current);
+                    return acc;
+                  },
+                  new Map<string, string[]>(),
+                );
+
+                return (
+                  <tr key={review.id} className={index % 2 ? "bg-[#F9FAFB]" : "bg-transparent"}>
+                    <td className="border-b border-[rgba(0,0,0,0.05)] px-3 py-2 align-top">{review.reviewerName || "Anonymous"}</td>
+                    <td className="border-b border-[rgba(0,0,0,0.05)] px-3 py-2 tabular-nums align-top">{review.starRating}</td>
+                    <td className="border-b border-[rgba(0,0,0,0.05)] px-3 py-2">
+                      <div className="space-y-2">
+                        {Array.from(groupedSelections.entries()).map(([categoryName, labels]) => (
+                          <div key={`${review.id}-${categoryName}`} className="space-y-1">
+                            <p className="text-[11px] font-medium uppercase tracking-wide text-[#9CA3AF]">{categoryName}</p>
+                            <div className="flex flex-wrap gap-1">
+                              {labels.map((label) => (
+                                <span
+                                  key={`${review.id}-${categoryName}-${label}`}
+                                  className="rounded-[6px] bg-[#F1F3F6] px-2 py-1 text-[12px] text-[#374151]"
+                                >
+                                  {label}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </td>
+                    <td className="border-b border-[rgba(0,0,0,0.05)] px-3 py-2 tabular-nums text-[#6B7280] align-top">
+                      {format(review.submittedAt, "yyyy-MM-dd HH:mm")}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </section>

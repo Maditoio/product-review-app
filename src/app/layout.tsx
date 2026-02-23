@@ -22,7 +22,17 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.variable} antialiased`}>
         <SiteNav />
-        {children}
+        <div className="min-h-[calc(100vh-48px)]">{children}</div>
+        <footer className="border-t border-[rgba(0,0,0,0.07)] bg-white">
+          <div className="page-wrap">
+            <div className="mx-auto flex max-w-6xl flex-col items-start gap-1 py-3 text-[12px] text-[#6B7280] sm:h-12 sm:flex-row sm:items-center sm:justify-between sm:py-0">
+              <p>Designed and developed by Mumba Mukendi</p>
+              <a href="mailto:freddie.mukendi@gmail.com" className="break-all text-[#9A3412] hover:underline sm:break-normal">
+                freddie.mukendi@gmail.com
+              </a>
+            </div>
+          </div>
+        </footer>
       </body>
     </html>
   );

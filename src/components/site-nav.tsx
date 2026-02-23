@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { LayoutGrid, Store, Shield } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { LogoutButton } from "@/components/logout-button";
@@ -14,15 +15,46 @@ const links = [
 
 export function SiteNav() {
   const pathname = usePathname();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    let alive = true;
+
+    const checkSession = async () => {
+      try {
+        const response = await fetch("/api/auth/session", {
+          cache: "no-store",
+        });
+
+        if (!response.ok) {
+          if (alive) setIsLoggedIn(false);
+          return;
+        }
+
+        const session = (await response.json()) as { user?: { email?: string | null } } | null;
+        if (alive) {
+          setIsLoggedIn(Boolean(session?.user?.email));
+        }
+      } catch {
+        if (alive) setIsLoggedIn(false);
+      }
+    };
+
+    void checkSession();
+
+    return () => {
+      alive = false;
+    };
+  }, [pathname]);
 
   return (
     <header className="border-b border-[rgba(0,0,0,0.07)] bg-white">
       <div className="page-wrap">
-        <div className="mx-auto flex h-12 max-w-6xl items-center justify-between">
+        <div className="mx-auto flex max-w-6xl flex-col items-start gap-2 py-2 sm:h-12 sm:flex-row sm:items-center sm:justify-between sm:py-0">
           <Link href="/products" className="text-[14px] font-semibold text-[#111827]">
             Product Reviews
           </Link>
-          <nav className="flex items-center gap-1">
+          <nav className="flex w-full flex-wrap items-center gap-1 sm:w-auto sm:flex-nowrap">
             {links.map((link) => {
               const active = pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href));
               const Icon = link.icon;
@@ -41,7 +73,7 @@ export function SiteNav() {
                 </Link>
               );
             })}
-            <LogoutButton />
+            {isLoggedIn ? <LogoutButton /> : null}
           </nav>
         </div>
       </div>
