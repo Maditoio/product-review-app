@@ -86,19 +86,31 @@ body {
 }
 
 .btn-primary {
-  background: var(--accent);
+  background: #f97316;
   color: #fff;
 }
 
 .btn-secondary {
-  border: 1px solid #e5e7eb;
-  background: #fff;
-  color: #374151;
+  border: 1px solid #fdba74;
+  background: #fff7ed;
+  color: #9a3412;
 }
 
 .btn-danger {
-  background: var(--error);
+  background: #e11d48;
   color: #fff;
+}
+
+.btn-primary:hover {
+  background: #ea580c;
+}
+
+.btn-secondary:hover {
+  background: #ffedd5;
+}
+
+.btn-danger:hover {
+  background: #be123c;
 }
 
 .btn-primary:disabled,

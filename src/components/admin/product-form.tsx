@@ -25,6 +25,52 @@ type ProductFormProps = {
   structureLocked?: boolean;
 };
 
+async function compressImage(file: File) {
+  if (!file.type.startsWith("image/")) {
+    return file;
+  }
+
+  const imageBitmap = await createImageBitmap(file);
+  const maxWidth = 1600;
+  const maxHeight = 1600;
+
+  const ratio = Math.min(maxWidth / imageBitmap.width, maxHeight / imageBitmap.height, 1);
+  const width = Math.max(1, Math.round(imageBitmap.width * ratio));
+  const height = Math.max(1, Math.round(imageBitmap.height * ratio));
+
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+
+  const context = canvas.getContext("2d");
+  if (!context) {
+    return file;
+  }
+
+  context.drawImage(imageBitmap, 0, 0, width, height);
+  imageBitmap.close();
+
+  const preferredType = "image/jpeg";
+  let quality = 0.82;
+  let blob = await new Promise<Blob | null>((resolve) => {
+    canvas.toBlob((result) => resolve(result), preferredType, quality);
+  });
+
+  while (blob && blob.size > 4 * 1024 * 1024 && quality > 0.52) {
+    quality -= 0.08;
+    blob = await new Promise<Blob | null>((resolve) => {
+      canvas.toBlob((result) => resolve(result), preferredType, quality);
+    });
+  }
+
+  if (!blob) {
+    return file;
+  }
+
+  const normalizedName = file.name.replace(/\.[^/.]+$/, "") + ".jpg";
+  return new File([blob], normalizedName, { type: preferredType });
+}
+
 export function ProductForm({ mode, initialData, structureLocked = false }: ProductFormProps) {
   const router = useRouter();
   const [data, setData] = useState<ProductInput>(initialData);
@@ -102,23 +148,41 @@ export function ProductForm({ mode, initialData, structureLocked = false }: Prod
   const uploadImage = async (file: File) => {
     setIsUploading(true);
     setApiError("");
+
+    let uploadFile = file;
+    try {
+      uploadFile = await compressImage(file);
+    } catch {
+      uploadFile = file;
+    }
+
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("file", uploadFile);
 
     const response = await fetch("/api/admin/upload", {
       method: "POST",
       body: formData,
     });
 
-    const payload = await response.json();
+    const raw = await response.text();
+    let payload: { url?: string; error?: string } = {};
+    if (raw) {
+      try {
+        payload = JSON.parse(raw) as { url?: string; error?: string };
+      } catch {
+        payload = {};
+      }
+    }
     setIsUploading(false);
 
-    if (!response.ok || !payload.url) {
-      setApiError("Image upload failed");
+    const uploadedUrl = payload.url;
+
+    if (!response.ok || !uploadedUrl) {
+      setApiError(payload.error || "Image upload failed");
       return;
     }
 
-    setData((prev) => ({ ...prev, image: payload.url }));
+    setData((prev) => ({ ...prev, image: uploadedUrl }));
   };
 
   const validate = () => {
