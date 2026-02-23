@@ -12,7 +12,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const { productId, reviewerName, starRating, selectedOptionIds } = parsed.data;
+  const { productId, reviewerName, starRating, feedback, selectedOptionIds } = parsed.data;
 
   const product = await prisma.product.findUnique({
     where: { id: productId },
@@ -69,6 +69,7 @@ export async function POST(request: Request) {
       productId,
       reviewerName: reviewerName || null,
       starRating,
+      feedback: feedback || null,
       selectedOptions: {
         create: uniqueSelected.map((categoryOptionId) => ({ categoryOptionId })),
       },

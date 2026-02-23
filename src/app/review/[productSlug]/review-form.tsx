@@ -28,6 +28,7 @@ export function ReviewForm({ product }: ReviewFormProps) {
   const [stepIndex, setStepIndex] = useState(0);
   const [starRating, setStarRating] = useState(0);
   const [reviewerName, setReviewerName] = useState("");
+  const [feedback, setFeedback] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [apiError, setApiError] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -103,6 +104,7 @@ export function ReviewForm({ product }: ReviewFormProps) {
           productId: product.id,
           reviewerName,
           starRating,
+          feedback,
           selectedOptionIds: flatSelectedOptions,
         }),
       });
@@ -144,6 +146,11 @@ export function ReviewForm({ product }: ReviewFormProps) {
             <Image src={product.image} alt={product.name} fill className="object-cover" />
           </div>
         ) : null}
+
+        <div className="mt-4 border-t pt-4">
+          <p className="label">Overall Star Rating</p>
+          <StarRating value={starRating} onChange={setStarRating} error={errors.starRating} />
+        </div>
       </div>
 
       {activeCategory ? (
@@ -208,14 +215,23 @@ export function ReviewForm({ product }: ReviewFormProps) {
       ) : null}
 
       <div className="card grid gap-3 p-4">
-        <div>
-          <p className="label">Overall Star Rating</p>
-          <StarRating value={starRating} onChange={setStarRating} error={errors.starRating} />
-        </div>
-
         <div className="grid gap-2">
           <label className="label">Reviewer Name (optional)</label>
           <input className="input" value={reviewerName} onChange={(event) => setReviewerName(event.target.value)} />
+        </div>
+
+        <div className="grid gap-2">
+          <label className="label">Written Feedback (optional)</label>
+          <textarea
+            className="input min-h-24 resize-none"
+            value={feedback}
+            onChange={(event) => setFeedback(event.target.value)}
+            placeholder="Share any additional thoughts about this product..."
+            maxLength={1000}
+          />
+          <p className="text-[11px] text-[#9CA3AF]">
+            {feedback.length}/1000
+          </p>
         </div>
 
         {apiError ? <p className="text-[12px] text-[#DC2626]">{apiError}</p> : null}

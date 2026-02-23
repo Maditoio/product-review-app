@@ -60,6 +60,7 @@ model Review {
   productId       String
   reviewerName   String?
   starRating     Int
+  feedback       String?
   submittedAt    DateTime         @default(now())
   product        Product          @relation(fields: [productId], references: [id], onDelete: Cascade)
   selectedOptions SelectedOption[]

@@ -31,6 +31,7 @@ export const submitReviewSchema = z.object({
   productId: z.string().min(1, "Product is required"),
   reviewerName: z.string().max(120).optional().or(z.literal("")),
   starRating: z.number().int().min(1, "Star rating is required").max(5),
+  feedback: z.string().max(1000).optional().or(z.literal("")),
   selectedOptionIds: z.array(z.string().min(1)).min(1),
 });
 
