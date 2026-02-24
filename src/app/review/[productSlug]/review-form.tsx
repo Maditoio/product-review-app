@@ -128,8 +128,8 @@ export function ReviewForm({ product }: ReviewFormProps) {
         <h2 className="text-[20px] font-semibold text-[#111827]">Thank you for your review</h2>
         <p className="mt-2 text-[13px] text-[#6B7280]">Your feedback has been recorded successfully.</p>
         {product.image ? (
-          <div className="relative mx-auto mt-4 h-48 w-full max-w-sm rounded-xl bg-[#F1F3F6] flex items-center justify-center">
-            <Image src={product.image} alt={product.name} fill className="object-contain p-3" />
+          <div className="relative mx-auto mt-4 h-80 w-full max-w-2xl rounded-xl bg-[#F1F3F6]">
+            <Image src={product.image} alt={product.name} fill className="object-cover" />
           </div>
         ) : null}
       </section>
@@ -142,8 +142,8 @@ export function ReviewForm({ product }: ReviewFormProps) {
         <h1 className="text-[20px] font-semibold text-[#111827]">{product.name}</h1>
         <p className="mt-2 text-[13px] text-[#6B7280]">{product.description}</p>
         {product.image ? (
-          <div className="relative mt-3 h-64 w-full rounded-xl bg-[#F1F3F6] flex items-center justify-center">
-            <Image src={product.image} alt={product.name} fill className="object-contain p-3" />
+          <div className="relative mt-3 h-80 w-full rounded-xl bg-[#F1F3F6]">
+            <Image src={product.image} alt={product.name} fill className="object-cover" />
           </div>
         ) : null}
 

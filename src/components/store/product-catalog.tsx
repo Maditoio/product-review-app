@@ -30,8 +30,8 @@ export async function ProductCatalog({ title, description }: ProductCatalogProps
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {products.map((product) => (
           <article key={product.id} className="card p-4">
-            <div className="relative mb-3 h-56 rounded-[12px] bg-[#F1F3F6] flex items-center justify-center">
-              {product.image ? <Image src={product.image} alt={product.name} fill className="object-contain p-2" /> : null}
+            <div className="relative mb-3 h-64 w-full rounded-[12px] bg-[#F1F3F6]">
+              {product.image ? <Image src={product.image} alt={product.name} fill className="object-cover" /> : null}
             </div>
             <h2 className="text-[14px] font-semibold text-[#111827]">{product.name}</h2>
             <p className="mt-1 line-clamp-2 text-[13px] text-[#6B7280]">{product.description}</p>
